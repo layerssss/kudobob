@@ -1,0 +1,15 @@
+@import "bootstrap-sprockets";
+@import "bootswatch/sandstone/variables";
+@import "bootstrap";
+@import "bootswatch/sandstone/bootswatch";
+@import "*";
+
+body {
+  padding-top: 70px;
+}
+
+.navbar {
+  .avatar {
+    margin: -10px 0;
+  }
+}
