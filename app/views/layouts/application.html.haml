@@ -6,6 +6,7 @@
     = csrf_meta_tags
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    %script{ src: '//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', data: { apikey: ENV['BUGSNAG_JS_KEY'] } }
   %body
     = navbar fixed: :top, container: false do
       = navbar_header brand: 'Kudobob', brand_link: root_path
