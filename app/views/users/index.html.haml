@@ -1,0 +1,5 @@
+%h1 Users
+= table_for @users do |t|
+  = t.column :name
+  = t.column do |user|
+    = gravatar_image_tag user.email, gravatar: { size: 40, secure: true, default: :identicon }

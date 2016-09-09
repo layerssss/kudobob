@@ -3,7 +3,7 @@
 # Table name: ammos
 #
 #  id         :integer          not null, primary key
-#  position   :string(255)
+#  position   :string
 #  dojo_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

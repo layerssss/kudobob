@@ -6,8 +6,8 @@
 #  dojo_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  keg        :string(255)
-#  position   :string(255)
+#  keg        :string
+#  position   :string
 #  direction  :integer
 #  ammo       :integer          default(0)
 #

@@ -14,12 +14,14 @@
           = navbar_item "Home", root_path
           = navbar_item "Dojos", dojos_path
           = navbar_item "Users", users_path
-          = navbar_item "Scripts", scripts_path
+          = navbar_item "My Scripts", scripts_path
+          = navbar_item "Public Scripts", public_scripts_path
         = navbar_group align: 'right' do
           - if current_user
             = navbar_text do
               = gravatar_image_tag current_user.email, class: 'avatar', gravatar: {size: 40, secure: true, default: :identicon }
               = current_user
+            = navbar_item 'Account', edit_user_registration_path
             %li
               = link_to destroy_user_session_path, method: :delete do
                 Sign Out

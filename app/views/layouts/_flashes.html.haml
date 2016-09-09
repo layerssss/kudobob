@@ -1,0 +1,5 @@
+- flash.each do |type, message|
+  - if type == 'alert'
+    %div{ data: { flash: [{ icon: 'fa fa-exclamation-triangle', message: message }, { type: 'danger' }].to_json } }
+  - if type == 'notice'
+    %div{ data: { flash: [{ icon: 'fa fa-check-circle', message: message }, { type: 'success' }].to_json } }

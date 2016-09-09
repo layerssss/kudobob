@@ -1,0 +1,6 @@
+%h1 Public Scripts
+= table_for @public_scripts do |t|
+  = t.column :user
+  = t.column :title
+  = t.column do |public_script|
+    = link_to 'Copy', copy_public_script_path(public_script), method: :post

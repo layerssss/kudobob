@@ -1,3 +1,8 @@
-- @dojos.each do |dojo|
-  %p
-    = link_to dojo, dojo
+%h1 Dojos
+= table_for @dojos do |t|
+  = t.column :title
+  = t.column link: true, data: 'Open'
+  = t.column link_method: :delete, data: 'Destroy' if admin?
+  = t.column link_action: :edit, data: 'Edit' if admin?
+.actions
+  = link_to 'New dojo', new_dojo_path if admin?

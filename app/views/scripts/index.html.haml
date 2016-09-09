@@ -1,0 +1,6 @@
+%h1 My Scripts
+= table_for @scripts do |t|
+  = t.column :title
+  = t.column data: 'Edit', link_action: :edit
+  = t.column data: 'Destroy', link_method: :delete
+= link_to 'New Script', new_script_path

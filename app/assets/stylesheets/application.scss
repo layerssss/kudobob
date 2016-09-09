@@ -8,6 +8,10 @@ body {
   padding-top: 70px;
 }
 
+table {
+  @extend .table;
+}
+
 .navbar {
   .avatar {
     margin: -10px 0;
