@@ -10,12 +10,23 @@
 #  position   :string
 #  direction  :integer
 #  ammo       :integer          default(0)
+#  alive      :boolean          default(TRUE)
+#  user_id    :integer
+#  color      :string
+#  name       :string
 #
 
 class Player < ApplicationRecord
   belongs_to :dojo, inverse_of: :players
+  belongs_to :user, inverse_of: :players
   serialize :position
+
+  before_destroy do
+    dojo.next_player! if dojo.active_player_id == id
+  end
+
   after_initialize do
+    self.color ||= "##{color_generator.create_hex}"
     self.position ||= [
       Random.rand(dojo.width),
       Random.rand(dojo.height)
@@ -23,27 +34,38 @@ class Player < ApplicationRecord
     self.direction ||= Random.rand 4
   end
 
+  after_create do
+    dojo.next_player! if dojo.active_player.nil?
+  end
+
   def name
-    "Player##{id} (#{position[0]} #{position[1]})"
+    super || "Player##{id}"
+  end
+
+  def title
+    "#{name}#{" (#{user})" if user}"
+  end
+
+  def to_s
+    title
   end
 
   def available_actions
     ['move', 'shoot', *direction_strings]
   end
 
-  def perform!
-    action = get_action
+  def perform!(action)
     puts "#{name} trying to perform #{action.inspect}"
     if action == 'shoot'
       raise "Can't shoot without ammo!" unless ammo > 0
       ammo -= 1
     elsif direction_strings.include?(action)
-      self.update_attributes! direction: action
+      update_attributes! direction: direction_strings.index(action)
     elsif action == 'move'
-      raise "Can't move against the wall!" unless dojo.position_valid?(next_position)
-      self.update_attributes! position: next_position
+      raise "Can't move against the wall!" unless dojo.position_valid? next_position
+      update_attributes! position: next_position
     else
-      raise "Unrecognised: #{action}"
+      raise "Unrecognised: #{action.inspect}"
     end
     puts "#{name} performed: #{action.inspect}"
   end
@@ -51,10 +73,10 @@ class Player < ApplicationRecord
   def next_position(for_direction = nil)
     for_direction ||= direction
     x, y = position
-    if for_direction % 2
+    if for_direction % 2 > 0
       y += for_direction - 2
     else
-      x += for_direction - 1
+      x -= for_direction - 1
     end
     [x, y]
   end
@@ -67,11 +89,20 @@ class Player < ApplicationRecord
     %w(right up left down)
   end
 
-  def get_action
-    [*available_actions, *(2.times.map{ 'move' })].sample
+  def as_json(options)
+    super(options).merge(
+      title: title,
+      available_actions: available_actions
+    )
   end
 
-  def as_json(options)
-    super(options).merge name: name
+  private
+
+  def color_generator
+    @@color_generator ||= ColorGenerator.new(
+      saturation: 0.99,
+      lightness: 0.7,
+      seed: 1
+    )
   end
 end

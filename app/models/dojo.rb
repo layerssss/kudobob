@@ -2,16 +2,21 @@
 #
 # Table name: dojos
 #
-#  id         :integer          not null, primary key
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  width      :integer          default(10)
-#  height     :integer          default(10)
+#  id                       :integer          not null, primary key
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  width                    :integer          default(10)
+#  height                   :integer          default(10)
+#  active_player_id         :integer
+#  active_player_updated_at :datetime
+#  fast                     :boolean          default(FALSE)
 #
 
 class Dojo < ApplicationRecord
   has_many :players, inverse_of: :dojo, dependent: :destroy
   has_many :ammos, inverse_of: :dojo, dependent: :destroy
+  belongs_to :active_player, class_name: 'Player', foreign_key: :active_player_id
+
   def title
     "Dojo ##{id}"
   end
@@ -33,22 +38,50 @@ class Dojo < ApplicationRecord
     (0..max_x).cover?(x) && (0..max_y).cover?(y)
   end
 
-  def perform!
-    players.each do |player|
-      begin
-        player.perform!
-      rescue RuntimeError => e
-        puts e.message
-      end
+  def player_perform!(player, action)
+    begin
+      raise "Too slow! Not your turn..." unless player.id == active_player_id
+      player.perform! action
+    rescue RuntimeError => e
+      puts e.message
+      PlayerChannel.broadcast_to(player, error: e.message)
     end
-    DojoChannel.broadcast_to(self, players: players)
+    DojoChannel.broadcast_to(
+      self,
+      dojo: self,
+      players: players,
+      ammos: ammos,
+    )
+    sleep 1 unless fast?
+    next_player!
   end
 
-  def loop_perform!
-    while true
-      reload
-      perform!
-      sleep 0.5
+  def active_player_expired?
+    active_player_updated_at && active_player_updated_at < 5.seconds.ago
+  end
+
+  def next_player!
+    reload
+    new_active_player = nil
+    if active_player.nil?
+      new_active_player = players.first
+    else
+      index = players.find_index(active_player)
+      new_active_player =  players[(index + 1) % players.size]
     end
+    DojoChannel.broadcast_to(self, info: "next_player #{active_player} => #{new_active_player}")
+    update_attributes! active_player: new_active_player, active_player_updated_at: Time.current
+    if new_active_player
+      PlayerChannel.broadcast_to(
+        new_active_player,
+        step: {
+          dojo: self,
+          player: new_active_player,
+          enemy: players.reject{ |p| p.id == new_active_player.id },
+          ammos: ammos,
+        }
+      )
+    end
+    new_active_player
   end
 end

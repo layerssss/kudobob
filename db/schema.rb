@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909004858) do
+ActiveRecord::Schema.define(version: 20160923032552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,10 +41,13 @@ ActiveRecord::Schema.define(version: 20160909004858) do
   end
 
   create_table "dojos", force: :cascade do |t|
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "width",      default: 10
-    t.integer  "height",     default: 10
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.integer  "width",                    default: 10
+    t.integer  "height",                   default: 10
+    t.integer  "active_player_id"
+    t.datetime "active_player_updated_at"
+    t.boolean  "fast",                     default: false
   end
 
   create_table "fields", force: :cascade do |t|
@@ -107,12 +110,16 @@ ActiveRecord::Schema.define(version: 20160909004858) do
 
   create_table "players", force: :cascade do |t|
     t.integer  "dojo_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.string   "keg"
     t.string   "position"
     t.integer  "direction"
     t.integer  "ammo",       default: 0
+    t.boolean  "alive",      default: true
+    t.integer  "user_id"
+    t.string   "color"
+    t.string   "name"
     t.index ["dojo_id"], name: "index_players_on_dojo_id", using: :btree
   end
 
@@ -124,15 +131,6 @@ ActiveRecord::Schema.define(version: 20160909004858) do
     t.boolean  "public"
     t.string   "title"
     t.index ["user_id"], name: "index_scripts_on_user_id", using: :btree
-  end
-
-  create_table "steps", force: :cascade do |t|
-    t.integer  "player_id"
-    t.integer  "index_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["index_id"], name: "index_steps_on_index_id", using: :btree
-    t.index ["player_id"], name: "index_steps_on_player_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

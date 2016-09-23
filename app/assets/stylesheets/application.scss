@@ -1,8 +1,9 @@
 @import "bootstrap-sprockets";
-@import "bootswatch/sandstone/variables";
+@import "bootswatch/slate/variables";
 @import "bootstrap";
-@import "bootswatch/sandstone/bootswatch";
+@import "bootswatch/slate/bootswatch";
 @import "animate";
+@import "font-awesome";
 @import "*";
 
 body {
@@ -17,4 +18,8 @@ table {
   .avatar {
     margin: -10px 0;
   }
+}
+
+* {
+  transition: all ease .1s;
 }

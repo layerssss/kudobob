@@ -18,6 +18,8 @@ gem 'bcrypt'
 gem 'devise'
 gem 'haml-rails'
 gem 'dotenv-rails'
+gem 'color-generator'
+gem 'shog'
 
 # Assets
 gem 'gravatar_image_tag'
@@ -32,7 +34,9 @@ gem 'bootstrap_form'
 gem 'underscore'
 gem 'jquery-rails'
 gem 'turbolinks'
+gem 'jquery-turbolinks'
 gem 'react-rails'
+gem 'ace-rails-ap'
 
 # Etc
 gem 'bugsnag'
@@ -48,9 +52,9 @@ end
 group :development do
   gem 'annotate'
   gem 'web-console'
-  gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
+  gem 'listen'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

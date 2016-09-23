@@ -22,6 +22,12 @@ class DojosController < ApplicationController
     end
   end
 
+  def show
+    @scripts = Script.where(public: true).to_a
+    @scripts.unshift(*current_user.scripts) if current_user
+    @scripts.uniq!
+  end
+
   def update
     @dojo.assign_attributes dojo_params
     if @dojo.save
@@ -39,6 +45,10 @@ class DojosController < ApplicationController
   private
 
   def dojo_params
-    params.require(:dojo).permit(:width, :height)
+    params.require(:dojo).permit(
+      :width,
+      :height,
+      :fast
+    )
   end
 end

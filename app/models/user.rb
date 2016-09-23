@@ -24,6 +24,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable
   has_many :scripts, inverse_of: :user, dependent: :destroy
+  has_many :players, inverse_of: :user, dependent: :destroy
 
   
   def name
@@ -31,6 +32,7 @@ class User < ApplicationRecord
       email.sub(/\@.*/, '').parameterize(separator: ' ').titleize
     end
   end
+
   def to_s
     name
   end

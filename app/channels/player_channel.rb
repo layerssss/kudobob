@@ -2,19 +2,41 @@
 class PlayerChannel < ApplicationCable::Channel
   def subscribed
     stream_for player
+    PlayerChannel.broadcast_to(
+      player,
+      player: player
+    )
   end
 
   def heartbeat
-    stream_for player
     player.touch
-    Player.where('updated_at < ?', 2.seconds.ago).delete_all
+    dojo.players.where('players.updated_at < ?', 10.seconds.ago).each(&:destroy!)
+    dojo.next_player! if dojo.active_player.nil? || dojo.active_player_expired?
+  end
+
+  def rename(data)
+    player.update_attributes!(name: data.fetch('new_name'))
+    PlayerChannel.broadcast_to(
+      player,
+      player: player
+    )
+  end
+
+  def ai_action(data)
+    action = data.fetch('ai_action')
+    dojo.player_perform!(player, action)
   end
 
   def unsubscribed
+    player.destroy!
   end
 
   private
   def player
-    Player.find_or_create_by!(params.slice(:keg, :dojo_id))
+    dojo.players.find_or_create_by!(keg: params[:keg], user: current_user)
+  end
+
+  def dojo
+    Dojo.find(params[:dojo_id])
   end
 end

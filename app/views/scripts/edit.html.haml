@@ -1,6 +1,8 @@
 %h1 Edit #{@script.title.inspect}
 = bootstrap_form_for @script do |f|
   = f.text_field :title
-  = f.text_area :content, rows: 10
+  = f.text_area :content, row: 10
+  %div{ style: 'height: 50vh; position: relative;' }
+    = react_component 'AceEditor', field: 'script[content]'
   = f.check_box :public
   = f.submit
