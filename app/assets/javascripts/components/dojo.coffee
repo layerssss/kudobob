@@ -158,7 +158,7 @@ _info = (msg)->
                   className: 'fa fa-fw fa-fighter-jet'
                   style:
                     transform: "rotate(#{rotate}deg)"
-                    fontSize: "3em"
+                    fontSize: h / @state.dojo.height
                 span
                   style:
                     position: 'absolute'
