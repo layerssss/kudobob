@@ -101,7 +101,7 @@ class Player < ApplicationRecord
         ammo_count: ammo_count + getting_ammos.size
       )
       getting_ammos.each(&:destroy!)
-    else
+    elsif action.present?
       raise "Unrecognised: #{action.inspect}"
     end
     puts "#{name} performed: #{action.inspect}"
