@@ -82,7 +82,7 @@ class Dojo < ApplicationRecord
         step: {
           dojo: self,
           player: new_active_player,
-          enemy: players.alive.reject{ |p| p.id == new_active_player.id },
+          enemies: players.alive.reject{ |p| p.id == new_active_player.id },
           ammos: ammos,
         }
       )
