@@ -9,17 +9,23 @@
 #  keg        :string
 #  position   :string
 #  direction  :integer
-#  ammo       :integer          default(0)
+#  ammo_count :integer          default(0)
 #  alive      :boolean          default(TRUE)
 #  user_id    :integer
 #  color      :string
 #  name       :string
+#  died_at    :datetime
 #
 
 class Player < ApplicationRecord
   belongs_to :dojo, inverse_of: :players
   belongs_to :user, inverse_of: :players
   serialize :position
+
+  scope :alive, -> { where alive: true }
+  scope :dead, -> { where alive: false }
+
+  default_scope -> { order id: :asc }
 
   before_destroy do
     dojo.next_player! if dojo.active_player_id == id
@@ -55,15 +61,46 @@ class Player < ApplicationRecord
   end
 
   def perform!(action)
+    # TODO: refactor this into seperate methods
+    # TODO: abstract geometry objects
     puts "#{name} trying to perform #{action.inspect}"
     if action == 'shoot'
-      raise "Can't shoot without ammo!" unless ammo > 0
-      ammo -= 1
+      raise "Can't shoot without ammo!" unless ammo_count > 0
+      dojo.players.each do |enemy|
+        hit = false
+        case direction_string
+        when 'right'
+          hit = enemy.position[1] == position[1] && enemy.position[0] > position[0]
+        when 'left'
+          hit = enemy.position[1] == position[1] && enemy.position[0] < position[0]
+        when 'down'
+          hit = enemy.position[0] == position[0] && enemy.position[1] > position[1]
+        when 'up'
+          hit = enemy.position[0] == position[0] && enemy.position[1] < position[1]
+        end
+        next unless hit
+        enemy.update_attributes! alive: false, died_at: Time.current
+      end
+      DojoChannel.broadcast_to(
+        dojo,
+        fire: {
+          position: position,
+          direction: direction
+        }
+      )
+      update_attributes!(
+        ammo_count: ammo_count - 1
+      )
     elsif direction_strings.include?(action)
       update_attributes! direction: direction_strings.index(action)
     elsif action == 'move'
       raise "Can't move against the wall!" unless dojo.position_valid? next_position
-      update_attributes! position: next_position
+      getting_ammos = dojo.ammos.select { |ammo| ammo.position == next_position }
+      update_attributes!(
+        position: next_position,
+        ammo_count: ammo_count + getting_ammos.size
+      )
+      getting_ammos.each(&:destroy!)
     else
       raise "Unrecognised: #{action.inspect}"
     end

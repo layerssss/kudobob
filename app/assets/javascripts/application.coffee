@@ -1,6 +1,7 @@
 # = require jquery
 # = require jquery_ujs
 # = require jquery.turbolinks
+# = require underscore
 # = require turbolinks
 # = require turbolinks-compatibility
 # = require react

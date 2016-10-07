@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923032552) do
+ActiveRecord::Schema.define(version: 20161006222513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,11 +115,12 @@ ActiveRecord::Schema.define(version: 20160923032552) do
     t.string   "keg"
     t.string   "position"
     t.integer  "direction"
-    t.integer  "ammo",       default: 0
+    t.integer  "ammo_count", default: 0
     t.boolean  "alive",      default: true
     t.integer  "user_id"
     t.string   "color"
     t.string   "name"
+    t.datetime "died_at"
     t.index ["dojo_id"], name: "index_players_on_dojo_id", using: :btree
   end
 

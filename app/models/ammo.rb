@@ -10,10 +10,10 @@
 #
 
 class Ammo < ApplicationRecord
-  belongs_to :dojo, inverse_of: :ammo
+  belongs_to :dojo, inverse_of: :ammos
   serialize :position
   before_save do
-    position ||= [
+    self.position ||= [
       Random.rand(dojo.width),
       Random.rand(dojo.height)
     ]

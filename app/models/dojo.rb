@@ -46,6 +46,10 @@ class Dojo < ApplicationRecord
       puts e.message
       PlayerChannel.broadcast_to(player, error: e.message)
     end
+    players.dead.each do |player|
+      next if player.died_at > 10.seconds.ago
+      player.update_attributes!(alive: true)
+    end
     DojoChannel.broadcast_to(
       self,
       dojo: self,
@@ -63,21 +67,22 @@ class Dojo < ApplicationRecord
   def next_player!
     reload
     new_active_player = nil
-    if active_player.nil?
-      new_active_player = players.first
+    if active_player.nil? || !active_player.alive
+      new_active_player = players.alive.first
     else
-      index = players.find_index(active_player)
-      new_active_player =  players[(index + 1) % players.size]
+      index = players.alive.find_index(active_player)
+      new_active_player =  players.alive[(index + 1) % players.alive.size]
     end
-    DojoChannel.broadcast_to(self, info: "next_player #{active_player} => #{new_active_player}")
     update_attributes! active_player: new_active_player, active_player_updated_at: Time.current
+    # TODO: refactor that
+    ammos.create! unless ammos.size > width * height * 0.1
     if new_active_player
       PlayerChannel.broadcast_to(
         new_active_player,
         step: {
           dojo: self,
           player: new_active_player,
-          enemy: players.reject{ |p| p.id == new_active_player.id },
+          enemy: players.alive.reject{ |p| p.id == new_active_player.id },
           ammos: ammos,
         }
       )
