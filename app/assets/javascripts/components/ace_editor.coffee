@@ -24,6 +24,9 @@
 @AceEditor = React.createClass
   getInitialState: ->
     id: "ace_editor_#{Math.floor 1000 * Math.random()}"
+  componentDidUpdate: (prevProps, prevState)->
+    if prevProps.value != @props.value
+      @editor.setValue @props.value || ''
   set_value: (value)->
     @editor.setValue value
   get_value: ->
@@ -32,6 +35,7 @@
     @editor = ace.edit(@state.id)
     @editor.setTheme('ace/theme/solarized_light')
     @editor.getSession().setMode('ace/mode/javascript')
+    @editor.setValue @props.value || ''
     if @props.field
       $form = $(ReactDOM.findDOMNode @).closest('form')
       $input = $form.find("[name='#{@props.field}']")

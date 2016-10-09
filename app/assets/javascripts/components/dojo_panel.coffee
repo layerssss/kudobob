@@ -38,10 +38,9 @@ _info = (msg)->
     
 @DojoPanel = React.createClass
   componentDidMount: ->
-    @refs.script.set_value @state.scripts[0]?.content
     @heartbeat_timer = setInterval =>
       @player_channel?.perform 'heartbeat', name: @state.player_name
-    , 5000
+    , 500
     @player_channel = App.cable.subscriptions.create
       channel: 'PlayerChannel'
       keg: @props.player_keg
@@ -55,13 +54,13 @@ _info = (msg)->
           script = @refs.script.get_value()
           try
             get_action = eval "_func = function () { \n#{script}\n }; _func()"
-            action = get_action step
-            action = String action
+            if get_action
+              action = get_action step
+              action = String action
           catch e
             console.error e
             _error "Execution error: #{e.message}"
-          if action
-            @player_channel.perform('ai_action', { ai_action: action })
+          @player_channel.perform('ai_action', { ai_action: action || '' })
         if error
           _error error
     @channel = App.cable.subscriptions.create
@@ -95,6 +94,7 @@ _info = (msg)->
   getInitialState: ->
     scripts: @props.scripts
     player_name: faker.name.firstName()
+    player_script: ''
     fires: []
   render: ->
     w = $(@refs.dojo).width() || 500
@@ -140,6 +140,7 @@ _info = (msg)->
             bottom: 0
           React.createElement AceEditor,
             ref: 'script'
+            value: @state.player_script
       div
        ref: 'dojo'
        className: 'dojo_canvas'

@@ -57,7 +57,9 @@ class Dojo < ApplicationRecord
         players: players,
         ammos: ammos,
       )
-      sleep 1 unless fast?
+      if players.alive.any?
+        sleep 1.0 / players.alive.count
+      end
     end
     next_player!
   end
