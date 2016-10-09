@@ -2,6 +2,7 @@
 # = require jquery_ujs
 # = require jquery.turbolinks
 # = require underscore
+# = require faker
 # = require turbolinks
 # = require turbolinks-compatibility
 # = require react

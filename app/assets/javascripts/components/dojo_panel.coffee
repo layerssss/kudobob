@@ -40,19 +40,16 @@ _info = (msg)->
   componentDidMount: ->
     @refs.script.set_value @state.scripts[0]?.content
     @heartbeat_timer = setInterval =>
-      @player_channel?.perform 'heartbeat'#, ->
+      @player_channel?.perform 'heartbeat', name: @state.player_name
     , 5000
     @player_channel = App.cable.subscriptions.create
       channel: 'PlayerChannel'
       keg: @props.player_keg
+      name: @state.player_name
       dojo_id: @props.id
     ,
       connected: =>
-      received: ({ player, step, error })=>
-        if player
-          @setState
-            player_title: player.title
-            player_name: player.name
+      received: ({ step, error })=>
         if step
           action = ''
           script = @refs.script.get_value()
@@ -97,6 +94,7 @@ _info = (msg)->
     @channel.unsubscribe()
   getInitialState: ->
     scripts: @props.scripts
+    player_name: faker.name.firstName()
     fires: []
   render: ->
     w = $(@refs.dojo).width() || 500
@@ -130,7 +128,7 @@ _info = (msg)->
             className: 'btn btn-default'
             onClick: =>
               if new_name = prompt('Player name:', @state.player_name)
-                @player_channel.perform('rename',  new_name: new_name)
+                @setState player_name: new_name
             i
               className: 'fa fa-fw fa-pencil'
         div

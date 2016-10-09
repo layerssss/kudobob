@@ -1,25 +1,18 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class PlayerChannel < ApplicationCable::Channel
   def subscribed
+    player.update_attributes! name: params[:name]
     stream_for player
-    PlayerChannel.broadcast_to(
-      player,
-      player: player
-    )
   end
 
   def heartbeat
-    player.touch
+    player.update_attributes! name: params[:name]
     dojo.players.where('players.updated_at < ?', 10.seconds.ago).each(&:destroy!)
     dojo.next_player! if dojo.active_player.nil? || dojo.active_player_expired?
   end
 
   def rename(data)
     player.update_attributes!(name: data.fetch('new_name'))
-    PlayerChannel.broadcast_to(
-      player,
-      player: player
-    )
   end
 
   def ai_action(data)
