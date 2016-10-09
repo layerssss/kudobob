@@ -157,6 +157,13 @@ _info = (msg)->
               x = (player.position[0] + 0.5) * w / @state.dojo.width
               y = (player.position[1] + 0.5) * h / @state.dojo.height
               rotate = - 90 * player.direction
+              @_cache_player_rotate ||= {}
+              if last_rotate = @_cache_player_rotate[player.id]
+                if rotate - last_rotate > 180
+                  rotate -= 360
+                if rotate - last_rotate < - 180
+                  rotate += 360
+              @_cache_player_rotate[player.id] = rotate
               div
                 key: player.id
                 style:
