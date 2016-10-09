@@ -63,7 +63,7 @@ class Dojo < ApplicationRecord
   end
 
   def active_player_expired?
-    active_player_updated_at && active_player_updated_at < 5.seconds.ago
+    active_player_updated_at && active_player_updated_at < 2.seconds.ago
   end
 
   def next_player!
