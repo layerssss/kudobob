@@ -9,7 +9,7 @@
     %script{ src: '//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', data: { apikey: ENV['BUGSNAG_JS_KEY'] } }
   %body
     = render 'layouts/flashes'
-    = navbar fixed: :top, container: false do
+    = navbar static: :top, container: false do
       = navbar_header brand: 'Kudobob', brand_link: root_path
       = navbar_collapse do
         = navbar_group do
