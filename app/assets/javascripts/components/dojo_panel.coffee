@@ -54,8 +54,8 @@ _info = (msg)->
           action = ''
           script = @refs.script.get_value()
           try
-            eval script
-            action = window.get_action step
+            get_action = eval "_func = function () { \n#{script}\n }; _func()"
+            action = get_action step
             action = String action
           catch e
             console.error e
