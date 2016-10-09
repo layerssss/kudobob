@@ -79,7 +79,7 @@ class Player < ApplicationRecord
           hit = enemy.position[0] == position[0] && enemy.position[1] < position[1]
         end
         next unless hit
-        enemy.update_attributes! alive: false, died_at: Time.current
+        enemy.update_attributes! alive: false, died_at: Time.current, ammo_count: 0
       end
       DojoChannel.broadcast_to(
         dojo,
