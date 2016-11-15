@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5'
 gem 'pg'
 gem 'puma'
+gem 'redis'
 
 # Application
 gem 'sass-rails'
@@ -12,7 +13,6 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'therubyracer', platforms: :ruby
 gem 'jbuilder'
-gem 'redis'
 gem 'redis-rails'
 gem 'bcrypt'
 gem 'devise'
