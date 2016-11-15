@@ -10,6 +10,7 @@
 #  active_player_id         :integer
 #  active_player_updated_at :datetime
 #  fast                     :boolean          default(FALSE)
+#  title                    :string
 #
 
 class Dojo < ApplicationRecord
@@ -18,7 +19,7 @@ class Dojo < ApplicationRecord
   belongs_to :active_player, class_name: 'Player', foreign_key: :active_player_id
 
   def title
-    "Dojo ##{id}"
+    super || ("Dojo ##{id}" unless new_record?)
   end
 
   def to_s

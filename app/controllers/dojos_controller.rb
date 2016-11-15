@@ -46,6 +46,7 @@ class DojosController < ApplicationController
 
   def dojo_params
     params.require(:dojo).permit(
+      :title,
       :width,
       :height,
       :fast
