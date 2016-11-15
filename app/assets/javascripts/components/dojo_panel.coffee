@@ -92,7 +92,7 @@ _info = (msg)->
     @player_channel.unsubscribe()
     @channel.unsubscribe()
   getInitialState: ->
-    scripts: @props.scripts
+    script_selecting: false
     player_name: faker.name.firstName()
     player_script: ''
     fires: []
@@ -129,8 +129,17 @@ _info = (msg)->
             onClick: =>
               if new_name = prompt('Player name:', @state.player_name)
                 @setState player_name: new_name
+                @player_channel.perform('rename', new_name: new_name)
             i
               className: 'fa fa-fw fa-pencil'
+            'Rename'
+          button
+            className: "btn btn-default #{'active' if @state.script_selecting}"
+            onClick: (ev)=>
+              @setState script_selecting: !@state.script_selecting
+            i
+              className: 'fa fa-fw fa-file-text'
+            @state.script_title || 'Load script'
         div
           style:
             position: 'absolute'
@@ -141,6 +150,29 @@ _info = (msg)->
           React.createElement AceEditor,
             ref: 'script'
             value: @state.player_script
+          if @state.script_selecting
+            div
+              style:
+                zIndex: 100
+                position: 'absolute'
+                top: 0
+                left: 0
+                right: 0
+                bottom: 0
+                backgroundColor: '#ccc'
+                padding: 10
+              @props.scripts.map (script)=>
+                button
+                  key: script.id
+                  className: 'btn btn-default btn-block'
+                  onClick: =>
+                    @refs.script.set_value script.content
+                    @setState
+                      script_selecting: false
+                      script_title: script.title
+                  span
+                    className: 'fa fa-fw fa-file-text'
+                  script.title
       div
        ref: 'dojo'
        className: 'dojo_canvas'

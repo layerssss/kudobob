@@ -24,7 +24,7 @@ class DojosController < ApplicationController
 
   def show
     @scripts = Script.where(public: true).to_a
-    @scripts.unshift(*current_user.scripts) if current_user
+    @scripts.push *current_user.scripts if current_user
     @scripts.uniq!
   end
 
