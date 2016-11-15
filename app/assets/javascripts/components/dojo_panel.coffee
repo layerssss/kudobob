@@ -173,7 +173,7 @@ _info = (msg)->
                       script_title: script.title
                   span
                     className: 'fa fa-fw fa-file-text'
-                  script.title
+                  "#{script.title} by #{script.user}"
       div
        ref: 'dojo'
        className: 'dojo_canvas'

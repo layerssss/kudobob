@@ -23,7 +23,9 @@ class DojosController < ApplicationController
   end
 
   def show
-    @scripts = Script.where(public: true).to_a
+    @scripts = Script.where(public: true).map do |script|
+      script.as_json.merge(user: script.user.to_s)
+    end
     @scripts.push *current_user.scripts if current_user
     @scripts.uniq!
   end
