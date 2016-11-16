@@ -7,6 +7,9 @@ class PublicScriptsController < ApplicationController
  def index
    @public_scripts = Script.where(public: true)
  end 
+
+ def show
+ end
  
  def copy
    current_user.scripts.create!(

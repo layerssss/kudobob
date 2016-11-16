@@ -1,0 +1,7 @@
+%h1 View #{@public_script.title.inspect}
+= bootstrap_form_for @public_script do |f|
+  = f.text_field :user, readonly: true
+  = f.text_field :title, readonly: true
+  = f.text_area :content, row: 10
+  %div{ style: 'height: 50vh; position: relative;' }
+    = react_component 'AceEditor', field: 'script[content]'

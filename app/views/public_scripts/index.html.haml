@@ -3,4 +3,6 @@
   = t.column :user
   = t.column :title
   = t.column do |public_script|
+    = link_to 'View', public_script_path(public_script)
+  = t.column do |public_script|
     = link_to 'Copy', copy_public_script_path(public_script), method: :post
