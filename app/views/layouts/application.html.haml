@@ -7,6 +7,7 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
     %script{ src: '//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js', data: { apikey: ENV['BUGSNAG_JS_KEY'] } }
+    = analytics_init if GoogleAnalytics.valid_tracker?
   %body
     = render 'layouts/flashes'
     = navbar static: :top, container: false do
