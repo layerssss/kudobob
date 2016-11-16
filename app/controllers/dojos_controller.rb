@@ -26,7 +26,11 @@ class DojosController < ApplicationController
     @scripts = Script.where(public: true).map do |script|
       script.as_json.merge(user: script.user.to_s)
     end
-    @scripts.push *current_user.scripts if current_user
+    if current_user
+      current_user.scripts.each do |script|
+        @scripts.push script.as_json.merge(user: 'yourself')
+      end
+    end
     @scripts.uniq!
   end
 
