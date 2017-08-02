@@ -16,7 +16,7 @@
 class Dojo < ApplicationRecord
   has_many :players, inverse_of: :dojo, dependent: :destroy
   has_many :ammos, inverse_of: :dojo, dependent: :destroy
-  belongs_to :active_player, class_name: 'Player', foreign_key: :active_player_id
+  belongs_to :active_player, class_name: 'Player', foreign_key: :active_player_id, optional: true
 
   def title
     super || ("Dojo ##{id}" unless new_record?)

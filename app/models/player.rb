@@ -19,7 +19,7 @@
 
 class Player < ApplicationRecord
   belongs_to :dojo, inverse_of: :players
-  belongs_to :user, inverse_of: :players
+  belongs_to :user, inverse_of: :players, optional: true
   serialize :position
 
   scope :alive, -> { where alive: true }

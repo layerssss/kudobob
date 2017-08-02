@@ -94,8 +94,8 @@ _info = (msg)->
   getInitialState: ->
     script_selecting: false
     player_name: faker.name.firstName()
-    player_script: @props.scripts[0].content || ''
-    script_title: @props.scripts[0].title
+    player_script: (@props.scripts[0] || {}).content || ''
+    script_title: (@props.scripts[0] || {}).title
     fires: []
   render: ->
     w = $(@refs.dojo).width() || 500

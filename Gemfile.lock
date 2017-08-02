@@ -103,7 +103,7 @@ GEM
       activesupport (>= 4.2.0)
     google-analytics-rails (1.1.1)
     gravatar_image_tag (1.2.0)
-    haml (5.0.1)
+    haml (5.0.2)
       temple (>= 0.8.0)
       tilt
     haml-rails (1.0.0)
@@ -257,7 +257,7 @@ GEM
       ref
     thor (0.19.4)
     thread_safe (0.3.6)
-    tilt (2.0.7)
+    tilt (2.0.8)
     turbolinks (5.0.1)
       turbolinks-source (~> 5)
     turbolinks-source (5.0.3)
@@ -322,7 +322,6 @@ DEPENDENCIES
   table-for
   therubyracer
   turbolinks
-  tzinfo-data
   uglifier
   underscore-rails
   web-console
